@@ -98,7 +98,3 @@ write.tar: README INSTALLATION CHANGES $(WSRC) wrttmp.h write.h orville.h \
 
 clean:
 	-rm -f wt core *.o
-
-distclean:
-	-rm -f write mesg amin huh helpers wt core *.o config.h config.cache \
-	config.log config.status Makefile write.tar
