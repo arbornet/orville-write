@@ -1,0 +1,344 @@
+.\"	@(#)write.1	2.41
+.\"
+.TH WRITE 1 "Jan 20, 2000"
+.AT 3
+.SH NAME
+write \- write to another user
+.SH SYNOPSIS
+.B write
+[-ctynsprfSv] [ user [ tty ] ]
+.br
+.B jot
+[-ltynsprfSv] [ user [ tty ] ]
+.br
+.B tel
+[-clynsprfSv] user [ tty ] [message...]
+.SH DESCRIPTION
+Note: This is "Orville write", an enhanced version of the standard Unix
+.I write
+program.
+
+.I Write
+copies lines from your terminal to that of
+another user.  When first called, it sends the message:
+.PP
+     Message from your-logname your-tty ...
+.PP
+The recipient of the message should write back at this point.
+Communication continues until an end of file is read from the terminal
+or an interrupt is sent.
+At that point,
+.I write
+writes "EOF (your-logname)" on the other terminal and exits.
+.PP
+The following protocol is strongly suggested for using
+.IR write :
+when you first write to another user,
+wait for him or her to write back before starting to type your message.
+Each party should end each message with a distinctive signal
+(\fBo\fR for
+``over'' is conventional), indicating that the other may reply;
+.B oo
+for ``over and out'' is suggested when conversation is to be terminated.
+Avoid typing when it is the other person's turn, as your text will get
+all garbled with theirs.
+Anyway, it's rude.
+.PP
+The
+.I jot
+command is a variation of
+.I write
+which normally
+sends each character to the other user as you type it instead of
+waiting for you to finish a line before sending anything as write does.
+.PP
+The
+.I tel
+command sends one line ``telegrams'' and then immediately disconnects.
+The message may be given on the command lines (in which case it is
+usually best to quote it).
+If you don't put a message on the command line, you will be prompted for it.
+This is usually the preferable way to invoke
+.I tel.
+.PP
+All three commands are actually the same program, and share much of the same
+behavior.
+.PP
+Permission to write may be denied or granted by use of the
+.IR mesg (1)
+command.
+Your write permissions upon login are installation dependent.
+If you write a person who has permissions on,
+but is currently writing someone else,
+you will be warned of the fact and be given
+a chance to cancel your write request before interupting
+the other conversation.
+If you write a person who is running a command under
+.IR amin (1)
+you will be warned similarly.
+.PP
+You can always send messages to people who are currently writing to you,
+even if there message permissions are off.
+If you have sent a person a
+.I tel
+message, then that person can write or telegram to you for the next 4 minutes,
+even if your message permissions are off.
+This means that you won't be sitting around wondering why someone won't
+reply, just because you've forgotten to turn your permissions on.
+It also means that if you don't want someone to be able to talk to you, then
+you shouldn't talk to them.
+Root may write anyone.
+.PP
+If you invoke the
+.I write
+or
+.I jot
+command with no user name,
+they will write to whatever user is currently writing you.
+If no one is writing you, an error message is printed.
+.PP
+If you invoke the
+.IR write ,
+.IR jot ,
+or
+.I tel
+command with the user name '.',
+they will write again to whoever you wrote to last.
+If you haven't written to anyone in this login session,
+an error message is printed.
+This is especially useful when you are exchanging a series of messages back
+and forth with
+.IR tel .
+.PP
+If you want to write to a user who is logged in more than once,
+the tty argument may be used to indicate the appropriate terminal.
+If the tty argument is not given,
+the terminal from which you are being written will be written to,
+if there is one.  If not, one of the lines you have write permission to
+will be chosen.
+If the tty argument is given, the user name can be given as "-", in which
+case it will write to whomever is on that tty, if anyone is.
+.PP
+On some systems there may be users designated as ``helpers''.
+If your system has helpers, then doing ``write help'' will write to some
+helper who is not busy.
+If more than one helper is available, one is
+selected at random to distribute the workload.
+Helpers designate themselves with the
+.IR mesg (1)
+command.
+They are considered busy if they are writing someone else, or if they
+are running a command under the
+.IR amin (1)
+program.
+.PP
+If the character ! , | , or & is found at the beginning of a line,
+.I write
+calls the shell to execute the rest of the line as a unix command.
+If the command began with a ! the output of the command
+will be sent only to your terminal.
+If it began with a |, output will be sent only to the other person's terminal.
+If it began with a & each of you will recieve a copy of the output.
+Note that
+.I write
+expands all strange control characters before sending them
+to the other person's terminal,
+but does not do so for characters echoed back to your terminal.
+.PP
+.I Write
+provides several command line options.
+Actually, the only difference between
+.IR write ,
+.IR jot ,
+and 
+.I tel
+is what default values they have for these options:
+.TP
+.B \-c
+Send each character as it is typed.  Actually, it will not begin
+doing so until after the other party has replied.  Also, if you type
+a line starting with a ")" then the rest of the current line will be held
+until you hit return and the sent (minus the ")").
+When
+this option used, typing a control-R
+will reprint the text of the line you are currently typing,
+and control-W will erase the last word you typed,
+even if your unix system doesn't usually support these.
+In the
+.I jot
+command this is the default.
+.TP
+.B \-l
+Send no characters until a full line has been entered.
+In the
+.I write
+command this is the default.
+.TP
+.B \-n
+During the duration of this conversation,
+temporarily turn off your message permissions,
+so as not to allow people other than the
+person being writen to write you.
+.TP
+.B \-y
+During the duration of this conversation, temporarily turn on your message
+permissions,
+allowing other people to write you after warning them that you are
+writing someone else.
+.TP
+.B \-p
+Postpone the receipt of telegrams 
+during the duration of the conversation.
+All telegram received during the conversation
+will be saved in your .lastmesg file,
+and will be displayed when you are finished.
+The
+.IR huh (1)
+command can be used in a shell escape to check saved messages without leaving
+.IR write .
+.TP
+.B \-s
+During the duration of this conversation,
+leave your write permissions unchanged.
+This normally the default.
+.TP
+.B \-r
+This causes
+.I write
+to prompt for the root passwd.
+If it is given correctly, you will be able to write anyone, no matter how
+his message permissions are set, amd you can override his preference for
+.I write
+or
+.IR tel .
+.TP
+.B \-f
+Disallow piping input through
+.I write
+and disable the '&' and '|' shell escapes.
+This is mostly meant to be used on 'options' commands in the orville.conf file.
+It has been mostly obsoleted by the 'pipes' configuration command.
+.TP
+.B \-t
+Sends a one line message (called a telegram) and then disconnects immediately.
+The text of the message may be given on the command line, or, if it isn't,
+you will be prompted for it.
+Though write will attempt to blank out messages given on the command line
+so they cannot be seen by users running
+.IR w (1)
+or 
+.IR ps (1),
+this will not always work, so secret messages should not be placed on the
+command line.
+This is the default in the
+.I tel
+command.
+.TP
+.B \-S
+Normally if you send a telegram to someone who has indicated a preference
+for writes, you get asked if you want to switch to writing, and vice versa.
+The -S flag suppresses this question, and just makes it quietly fail
+(unless you are root, in which case it quietly succeeds).
+.TP
+.B \-v
+print the version number.
+.PP
+The options selected by the writer may in some cases be overridden by the
+recipient.
+You can set your preferences for writes versus telegrams,
+and for line mode versus character mode with the
+.IR mesg (1)
+command.
+If the recipient has set write/telegram
+preferences, you will be asked if you want to use the other if you write
+him the wrong way.
+If you invoke
+.I Write
+with a
+.B \-S
+flag, then you will not be asked if you want to switch.
+Only root can actually override the recipient's preferences.
+For regular users, if you decline to switch, the command fails.
+.PP
+If the recipient has set character/line mode preferences,
+a message will be printed and
+you will be forced into his or her prefered mode.
+.SH CONFIGURATION
+The
+.I orville.conf
+file contains configuration information for Orville write and the associated
+utilities.  Lines starting with '#' and blank lines are ignored.  Other lines
+contain the commands listed below:
+.IP "answertel <seconds>" 1i
+Normally you can send telegrams to a person for four minutes (240 seconds)
+after they sent you a telegram, even if their message permissions are off.
+This command can be used to set size of that window to other values.
+.IP "disconnect [y|n]" 1i
+If disconnect is enabled the 'mesg d' and 'mesg N' commands
+can be used by the writee
+to disconnect everyone currently writing them.  (See
+.IR mesg (1)).
+It is enabled by default.
+.IP "exceptions [y|n]" 1i
+If exceptions are enabled the 'mesg ye' and 'mesg ne' commandsa
+can be used to limit which particular users can and cannot write you (See
+.IR mesg (1)).
+It is enabled by default.
+.IP "fromhost [y|n]" 1i
+If this flag is set, then message announcement banners will include the
+hostname of the sender's machine (and the reciever's since write does
+not allow interhost communications).
+It is disabled by default.
+.IP "helperlist <path>" 1i
+If this flag is set, then only people whose logins appear in the given file
+may be helpers.  Otherwise, anyone may be.
+It is disabled by default.
+.IP "helpername <name>" 1i
+By default you get help by doing 'write help'.  If you want to use some 
+keyword other than 'help', use this command to define it.
+.IP "helpers [y|n]" 1i
+Can people designate themselves to be helpers, and should 'write help'
+work?  By default, no.
+.IP "log <path>" 1i
+What file should logging be done in?  If not defined, or if it is defined
+and the file does not exist, then no logging will be done.
+.IP "loglevel <num>" 1i
+How much logging should be done?  Level 0 means none.  Level 1 means only
+log help requests (with information about whether they succeeded or not).
+Level 2 means logging a one-line description of each write connection made.
+Of course, no logging is done if 'log' is not defined or does not exist.
+No content of any write conversation is ever logged.
+The default is 1.
+.IP "nohelp <path>" 1i
+If someone does 'write help', but no helpers are found, this file is displayed.
+Normally it has information on other places to get help.
+If not defined, nothing is printed.
+.IP "pipes [y|n]" 1i
+If turned off, this disallows piping data through write, so you can't do
+'cat /etc/termcap | write joe'.  It also disables the '|' and '&' shell
+escapes.  This may be necessary if many users are using write to annoy other
+users by sending large chunks of data.
+It defaults on.
+.IP "novicehelp <path>" 1i
+If the environment variable NOVICE is defined, then print the contents of this
+file before running write.  If not defined, nothing is printed.
+.IP "options <command-name> -<flags>..." 1i
+Set default options for different links to the write program.  For example,
+if you have the line 'options jot -c' and you make a link to the write program
+named 'jot', then jot will default to character mode instead of line mode.
+If command-name is '*', then all links (even ones created by users) get that
+option.
+.IP "wrthist <path>" 1i
+This is the full pathname of the 'wrthist' file which maintains information
+about user's recent messages.  It is used to limit telegram flooding attacks,
+and allow replies to telegrams during the four minute window.
+By default it is in the same directory as the
+'orville.conf' file.
+.IP "wrttmp <path>" 1i
+This is the full pathname of the 'wrttmp' file which maintains information
+about user's current state.  By default it is in the same directory as the
+'orville.conf' file.
+.SH AUTHOR
+Jan Wolter
+.SH "SEE ALSO"
+mail(1), mesg(1), who(1), huh(1), finger(1), amin(1), helpers(1).

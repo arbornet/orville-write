@@ -1,0 +1,141 @@
+ORVILLE WRITE PROGRAM - version 2.55
+by Jan Wolter
+
+The orville write program is a version of the standard Unix write program that
+adds many nice features.  It has been heavily used on M-Net since 1985, on
+Grex since 1991 and on a few other systems.  It is a ground-up
+reimplementation using no proprietary code.  The current version is quite
+portable.
+
+Write was written for use on M-Net and Grex, both public access unix systems in
+Ann Arbor.  As such, many of the features are designed to support a system
+featuring a delicate mix of novice users and hostile pranksters, plus a lot of
+people who just want to talk.  It's user interface is pretty much identical to
+the normal write program, but it offers many extensions and improvements:
+
+ - It is always possible to write someone who is writing you, even if his
+   permissions are off.
+
+ - Doing "write" without arguments replies to whoever is writing you.
+   Similarly if you do "write whoever" and whoever is logged in more than once
+   it will always write to the tty he is writing you from.
+
+ - Optionally, orville write can be configured to allow users to turn on write
+   permissions for only a selected list of users, or to turn off write
+   permissions for all but a selected list of users.
+
+ - If you write a person who is writing someone else, you will be asked if
+   you want to interupt before the connection is made.
+
+ - All control characters are expanded before sending them to the other user.
+
+ - When you disconnect, the user will receive an "EOF (your-login)" instead
+   of a simple "EOF".  (This is done to aid users in identifying who just
+   did a "write whomever < /etc/termcap" to them.  The identification at the
+   head of the messages scrolls off.)
+
+ - It is possible to set up a link to write (called, perhaps, "jot") that will
+   send each character to the other user as you type it.  This is less boring
+   for the other user, since he doesn't have to sit there waiting for you to
+   finish a whole line before he has anything to read.  However, it will not
+   go into character-by-character mode until the other person has replied.
+   (Since it's really annoying to have loose characters from someone chatting
+   you getting mixed into the output from other programs you are running.)
+
+ - It is possible to set up a link to write (called, perhaps, "tel") to send
+   quick one-line telegram messages to other users.  Many people like to use
+   this as a way to hold a conversation by sending telegrams back and forth
+   while still doing something else on their terminals.  You can always write
+   or tel a person for up to four minutes after he sent you a tel, even if
+   his permissions are off.  There are provisions to prevent flooding people
+   with tels.
+
+ - Doing "write ." writes again to the last person you wrote.  This is
+   especially handy with the "tel" command.
+
+ - Users can set a switch so write won't ring bells when a message is received.
+
+ - There is a facility for users to designate themselves as "helpers".  Then
+   If a novice does "write help" he is connected to one of the helpers
+   currently not busy writing someone else.  If there is more than one
+   candidate, one is selected at random to distribute the workload.  It is
+   possible to configure the system so only users listed in a file may
+   designate themselves as helpers.  Helpers can do "mesg -h y" to turn on
+   their helper status, or "mesg -h n" to turn it off.  This is our main
+   mechanism for helping newusers on M-Net and Grex.  We also have the
+   "finger" program display question marks by the names of users who are
+   helpers, though source for finger is not included in this package.
+
+ - There are two additional shell escapes.  Doing "!ls" at the begining of
+   a line does the normal shell escape.  Doing "|ls" sends the output to the
+   other user instead of to you.  Doing "&ls" sends the output to both of you.
+   These are useful in instructing users about Unix commands through write
+   and for including files into your conversation (with "&cat file").
+
+ - When you receive a message from someone who is su'ed to some other account,
+   you are notified of both of his identities.  The name from /etc/utmp is, of
+   course, the one you reply to, but on many systems this is not as reliable an
+   indicator of the identity of the person who is writing you as his uid, so
+   mentioning this name as well can reduce confusion.
+
+ - There is a configuration file, which an administrator can edit to among
+   other thing, disallow piping files through write by disabling the & and |
+   shell escapes and requiring standard input to the program to be a tty.
+   This is meant to be turned on when you have a temporary excess of twits
+   annoying other users.
+
+ - The "mesg" command may be used to set a flag telling the system to record
+   telegrams sent to you.  If you have this turned on, the "huh" command will
+   redisplay the last message sent.  This is useful when telegrams get
+   swallowed by other activity on your screen.
+
+ - It is possible to separately set "write" and "telegram" permissions with
+   the "mesg" command.  Thus you can depermit telegrams being sent to you,
+   without depermitting writes.  You can also specify a preference for being
+   writting in character mode or line mode.
+
+ - The "mesg" program may optionally be compiled to allow a disconnect
+   option.  Doing "mesg N" (as opposed to "mesg n") will not only turn you
+   message permissions off, but disconnect anyone who is currently writing
+   you.
+
+ - There is an "amin" program (that's "am in", not the Ugandan guy), that lets
+   you do "amin vi filename".  The runs "vi filename" normally, but if anyone
+   writes you while you are running that process, he will be told that you are
+   running "vi" and asked if he still wants to write you.  "amin -n vi file"
+   just turns your message permissions off for the duration of the vi session.
+   "amin -np vi file" will record any telegrams anyone send you while you are
+   editing, and automatically display them when you are done editing.
+
+
+CAVEATS:  This program must run SUID-root or SGID-tty (where 'tty' is whatever
+ group the tty devices are on in your system).  (Otherwise you couldn't write
+ people who are writing you even when their message perms are off.)  Security
+ holes have been found in it from time to time over the years.  I like to think
+ they've all been fixed now.
+
+ As mentioned in the HELPERS discussion, we have made some associated mods
+ to the finger program.  The finger source I have is someone's cheap clone,
+ and is probably not useful for any serious modern Unix system.  Someday I'll
+ do a set of patches for Gnu's finger.
+
+ Our original purpose in rewriting write was that our old system had people's
+ tty's writable to others when their message perms were on, and this led to
+ too much "cat /etc/termcap > /dev/tty04" kind of stuff.  The orville write
+ program supports a choice of two different workarounds for that problem, but
+ neither is simple to install.  You either have to modify login (and possibly
+ finger and other programs) or you have to live with some inconveniences.  Of
+ course, nearly all modern Unix system don't have this problem (tty's are
+ owned by some "terminal" or "tty" group and only group permissions are ever
+ turned on).  If you have one of those systems, or you don't mind leaving
+ tty's writable, there should be no problem installing write.
+
+ We've tried hard to make Orville write very portable.  It should build easily
+ on almost all versions of Unix.
+
+If you'd like a copy of the distribution goto Orville Write's homepage at
+http:/www.unixpapa.com/write.html .
+
+By the way, if you'd like to give M-Net or Grex a try, telnet arbornet.org or
+cyberspace.org respectively (or aim your browser at them).  Both systems give
+away Unix accounts which may be used free of charge without validation.

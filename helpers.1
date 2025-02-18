@@ -1,0 +1,36 @@
+.\"	@(#)helpers.1	2.41
+.\"
+.TH HUH 1 "Jan 20, 2000"
+.AT 3
+.SH NAME
+helpers \- list or count helpers currently on the system.
+.SH SYNOPSIS
+.B helpers
+[-fln]
+.SH DESCRIPTION
+Helpers are users who volunteer to answer help requests by setting a help
+flag.  For more information, see the manual pages for
+.IR mesg (1)
+and
+.IR write (1).
+.PP
+The
+.I helpers
+command
+lists or counts the people who currently have helper flags set on the system.
+It lists them by default, or if the
+.B -l
+flag is given.
+It prints a count to standard output if the
+.B -n
+flag is given.
+.PP
+If the
+.B -f
+flag is given, only the helpers who are currently free are listed or counted.
+.SH AUTHOR
+Jan Wolter
+.SH FILES
+/etc/wrttmp
+.SH "SEE ALSO"
+mesg(1), write(1)

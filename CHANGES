@@ -1,0 +1,131 @@
+ Version 2.55:   Sep 28, 2004
+   - Rename log() function to wrtlog() to avoid conflicts with math.h log()
+     function.
+   - Add distclean target to Makefile.
+
+ Version 2.54:   May 30, 2003
+   - Fixed a couple buffer overrun problems that might have constituted a
+     possible security hole.
+   - Small portability fixes.
+
+ Version 2.53:   Jul 6, 2000
+   - Minor portability improvements to install scripts.
+
+ Version 2.52:   Jun 19, 2000
+   - Fixed a buffer overflow possibility in huh.c.  This is a major problem if
+     'huh' is installed as root.  Older versions should not be installed that
+     way.
+
+ Version 2.51:   Feb 20, 2000
+   - Renamed lib_utmp.c as getutent.c, and cleaned it up to work more similarly
+     to the standard getutent() functions.  Fixed some bugs Karyl Stein pointed
+     out with Linux utmp files.
+
+ Version 2.50: Jan 28, 2000
+   - Add -pk and -x* flags to mesg, so if we have a cooperative talkd, we can
+     control talk permissions seperately from write/tel permissions.
+   - Can optionally include hostnames in "Message from" headers.
+   - If a user is logged on more than once, write least idle tty.
+   - Use autoconf to generate ./configure script which makes Makefile and
+     and config.h.
+   - Replace old wrttab file with new orville.conf file, and move most site
+     configuration into there.
+   - Include timezone in message header, since sender's timezone is not
+     necessarily the same as the recipients.
+   - Lots of rearrangements of header files and such.
+   - Miscellaneous protability improvements.
+   - Write -r option supported for more different kinds of password files.
+   - Changed default name of the 'write -c' link to write from 'chat' to 'jot'.
+     Chat is a better name, and I had it first, but the other chat is more
+     widely distributed.
+
+ Version 2.41:  Mar 17, 1999
+   - ANSIfication of all function declarations.
+   - Use getutent() on systems that have it.  Need this when a utmp daemon
+     is used instead of a utmp file (thanks to Shane Wegner <shane@cm.nu>).
+   - Be a bit more careful about printing/deleting .lastmesg to ensure we
+     aren't root when we do it.
+   - clean target added to Makefile (thanks to Shane Wegner <shane@cm.nu>).
+   - Renamed "common.c" to "lib_common.c" because I wanted to.
+   - Lots of minor code cleanup.
+
+ Version 2.40:
+   - "mesg -bn" turns off bells.
+   - Fixed bug in disconnect so it disconnects multiple writes.
+   - exceptions through .yeswrite and .nowrite files and "mesg ye/ne" setting
+   - telegram mode no longer sets wrt_what, since it is too transient.
+   - telegram mode ignores -p, -y, -n, -c, -l flags (unless switch to write)
+   - added helpers command.
+   - Day of week in log file dates.
+   - mesg command prints warning if people still can write you.
+   - If previous helper is still available, another "write help" selects him.
+   - Disable core dumps and check that stderr is open.
+   - Security patches to .lastmesg file creation. [e]
+   - Security patches to .lastmesg reading. [f]
+   - Portability improvements to input flushing code
+
+ Version 2.34:
+   - Sizes of wrttmp entries stored in wrttmp header.
+   - Can write back to someone writing you even if he prefers tels.
+   - "mesg d" is like "mesg N" but doesn't change permissions.
+   - Linux bug fixes.
+   - Made writhist more resistant to system clock errors.
+
+ Version 2.33:
+   - Include uid name in message banner if different from utmp name.
+   - Root can override recipient's write/tel preferences.
+   - Optional recording of telegrams (with mesg -r, amin -p and huh)
+   - "mesg -hY" makes you a helper even when permissions are off.
+
+ Version 2.32:
+   - wrthist file added, permitting tel replys and regulating flooding.
+   - expand control-characters on local echo as well as send.
+   - teach it to echo tabs and backspaces more accurately.
+   - some low-grade word-wrap in character mode.
+   - HELPLOG option for logging help requests only.
+
+ Version 2.31:
+   - "write ." writes again to the last user written.
+   - write/telegram and line/character mode preferences added.
+   - support for login names with more than 8 characters.
+   - optional logging of all write requests.
+   - added -v to mesg. [2.31e]
+   - NOHELPER defines a file to print if there are no helpers. [2.31f]
+
+ Version 2.30:
+   - Integration of telegram option into write.
+   - Fix bug with shell escapes in "write -n" making "mesg n" perminant.
+   - Shell escapes use user's SHELL instead of always using /bin/sh.
+
+ Version 2.20:
+   - Reorganization of source code for greater modularity.
+   - If multiple helpers are available, choose one at random.
+   - When input is redirected, don't ask use stdin to ask user if he wants
+     to interupt a conversation.
+   - Don't go into character mode till other person has replied.
+   - Starting a line with ) in character mode does that line in line mode.
+   - If compiled with the NOVICEHELP variable and run with the NOVICE
+     environment variable set, prints the contents of the file named in
+     NOVICEHELP before running.
+   - Fixed amin's job control.
+
+ Version 2.11:
+   - If user is logged on more than once, prefer tty that is permitted.
+   - Clearer "Permission denied" message.
+
+ Version 2.12:
+   - Added TTY_OTHERS
+
+ Version 2.10:
+   - Attempted SYSV Compatible system.
+   - Added HELPERS
+
+ Version 2.00:  First BSD Compatible system.
+   - Added wrttab.
+   - Added consistancy checking between utmp and wrttmp to eliminate need for
+     modifications to /bin/login.
+   - Added support for job control and other BSD-isms.
+
+ Version 1.05:  Last M-Net system III specific version.
+
+ Version 1.00:  First release - Sept 1985.

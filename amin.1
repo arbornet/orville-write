@@ -1,0 +1,70 @@
+.\"	@(#)amin.1	2.41 (Wolter) 1/27/2000
+.\"
+.TH AMIN 1 "July 1, 1991"
+.AT 3
+.SH NAME
+amin \- notify writers that you are busy
+.SH SYNOPSIS
+.B amin
+[-ynesp] command [args...]
+.SH DESCRIPTION
+.I Amin
+is used when you don't want to be written while running a command.
+It runs the command given normally.  If your message permissions
+(see
+.IR mesg (1))
+are off, it does nothing much else.
+If your messages are on, people writing you with
+.IR write (1)
+will be warned that you are running that command and
+will be given the opportunity to change their minds about writing you.
+.PP
+The
+.B -n
+option may be used to turn your messages entirely off for the duration
+of the execution of command.
+People writing you will get "Permission denied".
+The
+.B -y
+option turns your message permissions on for the duration of
+the execution of the command.
+The
+.B -e
+may be used after either
+.B -n
+or
+.B -y
+to indicate that the logins listed in the
+.I .yeswrite
+or the
+.I .nowrite
+files respectively are exceptions to the message permissions set.
+The default is
+.B -s
+which leaves your message permissions in their original state.
+In any case, after the command is complete,
+your permissions will be restored to the original state.
+.PP
+The
+.B -p
+flag causes all telegrams sent to you while the command is running to be saved.
+They are displayed as soon as the command is complete.
+If used with the
+.B -n
+flag, writes are refused, but telegrams are still saved.
+.PP
+If you have designated yourself as a helper, you will still be marked on
+the
+.IR finger (1)
+output as a helper while you are running
+.I amin
+but people doing ``write help'' will not be connected to you,
+even if you have the helper flag set to ``Y''.
+.SH AUTHOR
+Jan Wolter
+.SH FILES
+/etc/wrttmp	to find message permissions
+.br
+/etc/utmp	to find user
+.SH "SEE ALSO"
+mesg(1), finger(1), write(1), huh(1).

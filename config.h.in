@@ -1,0 +1,97 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+/* Path name of configuration file. */
+#undef ORVILLE_CONF
+
+/* Default location of wrttmp file. */
+#undef D_WRTTMP
+
+/* Default location of wrthist file. */
+#undef D_WRTHIST
+
+/* Define if we want to be talk compatible. */
+#undef WITH_TALK
+
+/* Define if password file lookups are extremely slow on your system */
+#undef SLOWPASSWD
+
+/* Define if tty devices are normally permitted only to group */
+#undef TTY_GROUP
+
+/* Define if tty devices are normally permitted to others */
+#undef TTY_OTHERS
+
+/* Define to empty if the keyword does not work.  */
+#undef const
+
+/* Define if you have <sys/wait.h> that is POSIX.1 compatible.  */
+#undef HAVE_SYS_WAIT_H
+
+/* Define as the return type of signal handlers (int or void).  */
+#undef RETSIGTYPE
+
+/* Define if you have the ANSI C header files.  */
+#undef STDC_HEADERS
+
+/* Define if you do password lookups with the getuserpw() function.  */
+#undef HAVE_GETUSERPW
+
+/* Define if passwords in your shadow file are encrypted by pw_encrypt() */
+#undef HAVE_PW_ENCRYPT
+
+/* Define if passwords in your shadow file are encrypted by kg_pwhash() */
+#undef HAVE_KG_PWHASH
+
+/* Define if your <sys/time.h> declares struct tm.  */
+#undef TM_IN_SYS_TIME
+
+/* Define if you do password lookups with the getspnam() function.  */
+#undef HAVE_GETSPNAM
+
+/* Define if you have the random() function.  */
+#undef HAVE_RANDOM
+
+/* Define if you have the strchr() function.  */
+#undef HAVE_STRCHR
+
+/* Define if you have the getutent() function.  */
+#undef HAVE_GETUTENT
+
+/* Define if you have the <crypt.h> header file.  */
+#undef HAVE_CRYPT_H
+
+/* Define if you have the <fcntl.h> header file.  */
+#undef HAVE_FCNTL_H
+
+/* Define if you have the <paths.h> header file.  */
+#undef HAVE_PATHS_H
+
+/* Define if you have the <sgtty.h> header file.  */
+#undef HAVE_SGTTY_H
+
+/* Define if you have the <sys/time.h> header file.  */
+#undef HAVE_SYS_TIME_H
+
+/* Define if you may include both time.h and sys/time.h */
+#undef TIME_WITH_SYS_TIME
+
+/* Define if you have the <termio.h> header file.  */
+#undef HAVE_TERMIO_H
+
+/* Define if you have the <termios.h> header file.  */
+#undef HAVE_TERMIOS_H
+
+/* Define if you have the <unistd.h> header file.  */
+#undef HAVE_UNISTD_H
+
+/* Define if you have the crypt library (-lcrypt).  */
+#undef HAVE_LIBCRYPT
+
+/* Define if 'struct tm' has a tm_zone member */
+#undef HAVE_TM_ZONE
+
+/* Define if we have external array 'tzname' */
+#undef HAVE_TZNAME
+
+#endif /* CONFIG_H */

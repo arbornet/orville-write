@@ -1,0 +1,48 @@
+.\"	@(#)huh.1	2.41
+.\"
+.TH HUH 1 "Jan 20, 2000"
+.AT 3
+.SH NAME
+huh \- redisplay last telegram received.
+.SH SYNOPSIS
+.B huh
+[-sk]
+.SH DESCRIPTION
+.I Huh
+reprints the last telegram that was sent to you.
+It is intended for use when telegrams get garbled on your screen.
+
+.I Huh
+will only work if you had the ``record'' flag
+turned on when the telegram was received.
+This flag can be turned on with the
+.IR mesg (1)
+command.
+
+Normally,
+.I huh
+will delete each message immediately after displaying it.
+If the
+.B -k
+flag is given, the message is non deleted, and the next
+.I huh
+command will display it again.
+On the other hand, the
+.B -s
+flag suppresses the display of the message, so it will just be deleted.
+
+Normally, only the last message is retained,
+except when
+.IR amin (1)
+is run with the
+.B -p 
+flag.
+
+.SH AUTHOR
+Jan Wolter
+.SH FILES
+~/.lastmesg
+.br
+/etc/wrttmp
+.SH "SEE ALSO"
+mesg(1), write(1), amin(1)

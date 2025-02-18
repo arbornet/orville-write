@@ -1,0 +1,223 @@
+	                 INSTALLATION INSTRUCTIONS
+		           ORVILLE WRITE PROGRAM
+		               Version 2.54
+		                Jan Wolter
+
+Installation of Orville write is fairly simple on most modern Unix systems.
+
+1.  Unpack the archive and cd into the directory.
+
+2.  If you have an really old Unix system, check that tty devices on your
+    system aren't permitted to others.  Do 
+
+        mesg y
+	ls -l `tty`
+
+    Normally you will see that your tty is permitted only to group, not to
+    others.  If it is permitted to others, read the section at the end of
+    this file.
+
+3.  Run './configure'
+
+    There are lots of flags that can be given on the ./configure command,
+    but a few are worth special note:
+
+      --prefix=<dir>		default:  /usr/local
+      --sysconfdir=<dir>	default:  PREFIX/etc
+      --bindir=<dir>            default:  PREFIX/bin
+      --mandir=<dir>		default:  PREFIX/man
+          Where the software will be installed.  All the programs will be put
+	  in bindir.  The orville.conf file will be put in sysconfdir.  The
+	  manual pages will be put in mandir.  It is especially important to
+	  get sysconfdir set the way you want it before compiling, because
+	  the location of the orville.conf file is compiled into all Orville
+	  programs, so it cannot be moved without rebuilding the programs.
+
+      --with-talk
+          If you have a talk or ntalk program that has been modified to work
+	  with Orville write, flick this switch.
+
+      --with-slow-passwd
+          If password file lookups on your system are slow (say you have lots
+	  of users, and a non-hashed password database), setting this flag
+	  will speed things up, but the writee won't be notified if the
+	  writer's uid does not match his login name.
+
+4.  Run 'make'
+
+    This will build the 'write', 'mesg', 'amin' and 'helpers' programs.
+
+5.  Find the standard versions of write and mesg on your system.  Depermit
+    them and move them to a safe place.  You may want them back someday.
+
+6.  If you are upgrading from a previous version of Orville write, you may
+    want to save a copy of your old 'orville.conf' file.  You should be
+    forwarned that users currently logged in will have some of their write
+    permissions reset to the default settings.  This is because the format
+    of the 'wrttmp' file may change, and is thus emptied during each install.
+
+7.  Run 'make install' as root.
+
+8.  Edit the installed copy of the orville.conf file (which is, by default, in
+    /usr/local/etc/orville.conf).  This is where most site configuration
+    is done.
+
+    If you enable any of the other files (write.log, write.help, write.nohelp,
+    helperlist), you must create them and put in sensible data.
+
+    If you don't plan to enable helpers, you could remove the helper program
+    and man page.
+
+OTHER PROGRAMS
+
+On M-Net and Grex, we have modifed 'finger' so that if a person is a helper,
+a '?' is placed next to their tty (where the '*' would be if they're message
+permissions were off).  We have also modified ntalkd to respect Orville's
+permissions.  Neither of these modified programs is really in good enough
+shape for general distribution at this point.  Maybe later.
+
+FILE PERMISSIONS
+
+Orville write has a lot of files, whose permissions need to be set in
+specific and rather odd ways.  The install script should do things correctly.
+For manual installers, here is a summary:
+
+               FILE          OWNER   GROUP   PERMS
+               -----------------------------------
+               write         root    tty      6711
+               mesg          root     -       4711
+               amin          root     -       4711
+               huh           root     -       4711
+               helpers       root     -       4711
+               orville.conf  root     -        644
+               wrttmp        root     -        600
+               wrthist       root     -        600
+             * write.log     root     -        600
+             * write.help     -       -         -
+             * helperlist     -       -         -
+             * write.nohelp   -       -         -
+
+    tty  means whichever group owns all tty devices on your system.
+     -   means I don't care.
+     *   means this file is only used if you configure it into orville.conf
+         and is not installed by 'make install'
+
+Note the decidedly odd permissions of the write program, which as suid root
+as well as sgid tty.  It really does need this, because it uses it's group
+identity to check tty's for readability.  I should probably change this
+someday.
+
+An alternate configuration with a few fewer suid-root programs.  Maybe this
+should be the default, I haven't had the time to work on figuring out how to
+make the configure script work out the names of your tty group.
+
+               FILE          OWNER   GROUP   PERMS
+               -----------------------------------
+               write         root    tty      6711
+               mesg          root     -       6711
+               amin           -      tty      2711
+               huh            -      tty      2711
+               helpers        -      tty      2711
+               orville.conf  root     -        644
+               wrttmp        root    tty       660
+               wrthist       root    tty       660
+             * write.log     root     -        600
+
+The 'mesg' program can be made sgid-tty instead of suid-root if you don't
+want to be able to turn on the 'disconnect' option in orville.conf.
+
+If you make wrttmp and wrthist readable to others then you can get rid of a
+sgid bits on 'huh' and 'helpers'.  This allows people to figure out more
+about how other users message permissions are set, and who they have been
+writing recently.  It's probably not worthwhile.
+
+OLD-STYLE TTY PERMISSIONS
+
+In the olden days, Unix systems were normally set up so that if you turned on
+your message permissions, then your tty device was permitted to everyone.
+The basic problem with systems of this type is that if you have your message
+permissions on then people can do annoying things like send files to your
+screen with:
+
+	cat /etc/termcap > /dev/yourtty
+
+We had all too much trouble with this kind of frolicsome behavior on M-Net back
+in 1985, and the original purpose of doing a re-implementation of write was to
+block this kind of thing.  That means changing the way tty permissions are
+handled, and doing that is going to cause headaches because it effects every
+program that does anything with tty permissions.
+
+There are several options  (A and D are the easy ones):
+
+ (A) Leave tty permissions working the same old way.  People will still be
+     able to 'cat' garbage to your tty, but you won't have to worry about
+     modifying any other programs on your system and there will be no strange
+     side effects.  This is not true of any of the other options below.
+
+     To use this option, edit the config.h file after running ./configure.
+     Remove the TTY_GROUP definition, and add the TTY_OTHERS definition.
+     Continue as above.
+
+ (B) Revise the tty permissions to work with group permissions as on the
+     systems described in the first part of this file.  To do this you will
+     need, at a minimum, to modify the login program so it initially sets up
+     your tty permissions and group that way.  Programs like "uucp", that just
+     need to be able to turn off write permissions, will work without change.
+     Programs like "pr" and "nroff" that turn off permissions while running
+     and then turn them on again afterwards could be a problem, because they
+     may turn the unwanted permissions to others back on.  Other write-like
+     programs (talkd?) may have to be modified, though it is possible that you
+     may be able to get away with just running them SGID tty.  If you go this
+     route, then the installation of write should be done as described in the
+     first section of this document.  I've never tried converting a system
+     this way.
+
+     To use this option, build write just as above.
+
+ (C) Leave tty devices depermitted at all times, and have write store the
+     message permissions to be used in the /etc/wrttmp file, with the other
+     status information.  This requires that the login program be modified
+     so that tty's are depermitted, though if you are any kind of guru dude,
+     you can make this fix without source by hacking argument to the chmod()
+     call in the binary (do people still do that?).  This will have the odd
+     effect of having message permissions default OFF when people log in.
+     This is good for uucp, which doesn't like people writing it, but normal
+     users will need to put a "mesg y" in their .logins.  Unless modified,
+     programs like "pr" will fail to turn off the message permissions when
+     they start, and then will throw your tty permissions wide open when they
+     finish.  Other write-like programs may require even larger modifications
+     to work right.
+
+     To use this option, edit the config.h file after running ./configure.
+     Remove the both the TTY_GROUP definition and the TTY_OTHERS definition.
+     Continue as above.
+
+ (D) Leave tty devices depermitted at most times, and have write store the real
+     message permissions in the /etc/wrttmp file.  You don't modify the login
+     program, so initially people's ttys will be writable to others.  You
+     have the users put either "mesg y" or "mesg n" in their .login files.
+     As a side effect these will depermit the tty devices, so that for ever
+     afterwards no catting will be possible.  Uucp will be fine, since all
+     message permissions in the wrttmp file initially default off, and the
+     uucp program turns off the tty device permissions itself.  However
+     other programs that fiddle with tty permissions will still have problems
+     as in option C.
+
+     To use this option, edit the config.h file after running ./configure.
+     Remove the both the TTY_GROUP definition and the TTY_OTHERS definition.
+     Continue as above.
+
+ (E) Leave tty devices depermitted at all times, and have login initialize the
+     message permissions in the /etc/wrttmp file.  Add code to the login
+     program to depermit the tty device and to make an appropriate entry in
+     the user's slot of the /etc/wrttmp file.  Default the permissions on,
+     unless there is a file named ".mesgn" in the user's home directory.  Give
+     uucp an ".mesgn" file.  This actually what was done on M-Net while it was
+     still running under System III, but it isn't anymore.  It's complicated,
+     but it does give you un-writable tty devices and message permissions that
+     default on for normal users.  You still have the other incompatibility
+     problems mentioned in option C.
+
+     To use this option, edit the config.h file after running ./configure.
+     Remove the both the TTY_GROUP definition and the TTY_OTHERS definition.
+     Continue as above.

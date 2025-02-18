@@ -1,0 +1,33 @@
+#!/bin/sh
+# "SAY" SCRIPT - A cheap simulution of the Well/River "say" command using
+#      Jan Wolter's "gate" and "write" programs.
+#
+# SYNOPSIS:
+#    say [user|-|.] [tty]
+#
+# DESCRIPTION:
+#    Say will prompt you to enter some text, and then send it in one burst
+#    to the named user.  It is essentially similar to "tel" except that
+#    "tel" is limited to a single line of text.
+#
+#    As with tel, the recipient must have message and telegram permissions
+#    enabled.  If he has the "mesg -r" flag set, he will be able to redisplay
+#    the message with the "huh" command.
+#
+#    Say will not work if system administrators have set the -f flag to be
+#    the default on "write."
+#
+#    The two lines below should be set to the paths of the "gate" and "write"
+#    commands.  "Red" could be used instead of "gate."
+#
+gate=/wolter/src/mnet/gate/gate
+write=/wolter/src/mnet/write/write
+rm=/bin/rm
+#
+file=/tmp/say$$
+$gate --prompt="" --outdent=0 $file
+if ($write $* < $file)
+then
+	echo DONE
+fi
+rm -f $file

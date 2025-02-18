@@ -1,0 +1,248 @@
+.\"	@(#)mesg.1	2.41
+.\"
+.TH MESG 1 "Jan 20, 2000"
+.AT 3
+.SH NAME
+mesg \- permit or deny messages
+.SH SYNOPSIS
+.B mesg
+[-s] [-v] [y|n|ye|ne|Y|N|NE] [d] [-p[w|t|k|a]] [-x[w|t|k|n]] [-m[l|c|a]] [-h[Y|y|n]] [-r[y|n]] [-b[y|n]]
+.SH DESCRIPTION
+This is the "Orville write" verison of the standard Unix
+.I mesg
+command.
+.PP
+.I Mesg
+with argument
+.B n
+forbids messages via
+.IR  write (1),
+.IR jot (1),
+.IR tel (1),
+and
+.IR talk (1)
+by revoking non-user
+write permission on the user's terminal.
+.I Mesg
+with argument
+.B y
+reinstates permission.
+All by itself,
+.I mesg
+reports the current state without changing it.
+.PP
+The
+.B ne
+and
+.B ye
+settings mean ``no with exceptions'' and ``yes with exceptions'' respectively.
+If
+.B ne
+is set, and there is file named
+.I .yeswrite
+in your home directory,
+then the users whose logins are listed there may still write you.
+If
+.B ye
+is set, and there is a file named
+.I .nowrite
+in your home directory,
+then the users whose logins are listed there may not write you.
+These files have no effect if the permissions are set to
+.B n
+or
+.BR y .
+The
+.I .nowrite
+and
+.I .yeswrite
+files do not need to be permitted to anyone else,
+and almost any plausible format will be understood
+(listing one login name per line is a good default).
+Lines may be commented out with a # sign in the first column.
+.PP
+The upper case
+.B Y
+and
+.B N
+do all that the lower case ones do, but may have some additional affects
+depending on the installation.
+.PP
+The
+.B N
+argument, if enabled, will attempt to disconnect any write sessions currently
+directed at your tty.
+This is meant to allow users to slam the door on unwelcome writers.
+Note that a simple ``mesg n'' will not stop anyone who is already writing
+you from continuing to do so, it only prevents new connections from being
+made.
+The
+.B NE
+setting also causes a disconnect, but turns your settings to
+.B ne
+instead of
+.BR n .
+The
+.B d
+argument causes a disconnect, just like ``mesg N'', but does not change
+your message permissions.
+.PP
+Normally 
+.I mesg
+always depermits your tty device, so you can only be written through
+.I write
+and similar programs.
+This prevents arbitrary stuff from being redirected to your tty.
+When you do ``mesg Y''
+your tty is write permitted to others.
+This is rarely necessary or desirable.
+.PP
+.I Mesg
+can also be used to set other switches that affect Orville
+.IR write (1).
+The
+.B -p
+flag lets you set preferences to
+(w) write, (t) telegrams, (k) talk, or (a) any.
+The default is ``any.''
+If you set a preference to write,
+then people will not be able to send telegrams or talk requests to you.
+If they try to send telegrams, they will be asked if they want to write
+you instead.
+Similarly if you prefer telegrams, people will not be able to write or talk to
+you, and if you prefer talk, people will not be able to write or tel you.
+You can designate two preferences, like ``mesg -pt -pw'' to allow people to
+write or telegram you, but not make talk requests to you.
+Alternately, you can use the
+.B -x
+flag to block particular programs.
+Doing ``mesg -xk'' blocks only the talk program, and is equivalent to
+``mesg -pt -pw''.
+Similarly the ``-xn'' flag excludes no programs and is equivalent to ``-pa''.
+Trying to block all programs just turns you permissions off.
+.PP
+The
+.B -m
+flag lets you set modes to
+(l) line, (c) character, or (a) any.
+The default is ``any.''
+If you set a mode, then all writes to you will be done in that mode.
+If you leave it as ``any,''
+the choice is left to the writer.
+This will not affect connections already in progress, only future ones.
+.PP
+The
+.B -r
+flag lets you turn on or off the recording to telegrams sent to you.
+If it is enabled, everytime you are sent a telegram (or a write with
+input taken from a file), the text of the messages is saved in a file
+named .lastmesg in your home directory.  This allows you to redisplay
+the last message sent to you using the
+.IR huh (1)
+command.
+If a screen clear ate a telegram message before you had time to read it,
+then the
+.I huh
+command lets you see it again.
+Note that only the last message sent is stored.
+The file is permitted to be readable to you only.
+.PP
+The
+.B -b
+flag lets you tell the
+.I write
+and
+.I talk
+programs whether or not to beep
+when a person writes you or sends you a telegram.  The default is to beep.
+.PP
+The 
+.B -h
+flag lets you turn on or off your helper status.
+People who designate themselves as helpers are announcing their
+willingness to help out lost users.
+Their accounts will be marked on the
+output of the
+.IR finger (1)
+command, and if anyone does a
+.I write
+or
+.IR jot (1)
+to ``help'' they automatically get connected to someone who has a help
+flag set.
+Normally, turning your permissions off also turns your helper-status off,
+but if you set the
+.I -h
+flag to
+.IR Y ,
+then you will remain a helper even when your message permissions are off.
+This means you can receive help requests, but not normal messages.
+.PP
+On some systems there is a restricted list of users who may be helpers.
+This is usually kept in the file /etc/helpers, one login name per line.
+If such a file exists then you will have to get the operators to add your
+name to it to be able to designate yourself as a helper.
+.PP
+If no new settings are given to
+.IR mesg ,
+then it just reports on the current settings.
+Normally it prints the message permissions, but if a
+.BR -h ,
+.BR -p ,
+.BR -r ,
+or 
+.B  -m
+flag was given without a new value after it, then the current status of
+that switch will be printed instead.
+If you use the
+.B -s
+flag, then this output will be suppressed.
+The command still reports the status of the selected switch with its numeric
+return code.
+.PP
+If you use the
+.B -v
+flag, all switch settings will be reported in a verbose mode.
+.PP
+The numeric values returned as return codes
+(see below) can also be used to set switches.
+Thus ``mesg 0 -m2'' sets permissions on, and the mode to any.
+This makes it easy for shell scripts to restore settings that were stored
+previously.
+.PP
+The argument syntax is actually a lot looser than mentioned above.
+The dashes before options may be omitted,
+Spaces may be added or omitted anywhere in the argument list.
+
+.SH FILES
+/dev/tty*
+.br
+/etc/wrttmp
+.br
+/etc/helpers
+.SH "SEE ALSO"
+write(1), amin(1), finger(1), huh(1), helpers(1), talk(1)
+.SH DIAGNOSTICS
+Exit status is -1 on an error.
+Otherwise a code is returned reporting the status of one of the settings.
+If the arguments included
+.BR -h ,
+.BR -p ,
+or 
+.B  -m
+flags without a new value after it, then the last of these listed will be
+reported.
+Otherwise, if any options were set, the last of those listed in the argument
+list will be reported.
+And if nothing was set, then message permissions are reported.
+.PP
+When message permissions, record settings, or helper settings are reported,
+0 indicates 'y', and 1 indicates 'n'.
+When preferences are reported,
+1 indicates 'w', 2 indicates 't', and 4 indicates 'k', and any combinations
+are returned as sums of these values.
+When modes are reported,
+0 indicates 'l', 1 indicates 'c', and 2 indicates 'a'.
+.SH BUGS
+Turning off 'talk' permissions will only work if you have a talkd which has
+been modified to understand Orville write's permission.

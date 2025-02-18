@@ -1,0 +1,77 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(orville.h)
+AC_CONFIG_HEADER(config.h)
+AC_SUBST(group_id)
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_INSTALL
+AC_PROG_LN_S
+
+dnl Checks for libraries.
+AC_CHECK_LIB(crypt, crypt)
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_HEADER_SYS_WAIT
+AC_HEADER_TIME
+AC_CHECK_HEADERS(fcntl.h paths.h sys/time.h unistd.h crypt.h)
+
+AC_CHECK_HEADERS(termios.h termio.h sgtty.h, [break])
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_STRUCT_TM
+AC_STRUCT_TIMEZONE
+
+dnl Checks for library functions.
+AC_PROG_GCC_TRADITIONAL
+AC_TYPE_SIGNAL
+AC_CHECK_FUNCS(random getutent strchr)
+AC_CHECK_FUNCS(getuserpw)
+
+if test "$ac_cv_func_getuserpw" != "yes"; then
+  AC_SEARCH_LIBS(getspnam, shadow,
+  [ AC_DEFINE(HAVE_GETSPNAM)
+    AC_SEARCH_LIBS(kg_pwhash,shadow,
+    [ AC_DEFINE(HAVE_KG_PWHASH)],
+    [ AC_SEARCH_LIBS(pw_encrpyt,shadow, [AC_DEFINE(HAVE_PW_ENCRYPT)])])
+  ])
+fi
+
+dnl Checks for flags
+
+AC_ARG_WITH(slow_passwd,
+[ --with-slow-passwd       looking up people in /etc/passwd is slow],
+[ if test "$enableval" != "no"; then
+    AC_DEFINE(SLOWPASSWD)
+  fi])
+
+AC_ARG_WITH(talk,
+[ --with-talk              you have a talkd hacked for orville compatibility],
+[ if test "$enableval" != "no"; then
+    AC_DEFINE(WITH_TALK)
+  fi])
+
+dnl Unconditionally, for now.  Later try to sense this.
+AC_DEFINE(TTY_GROUP)
+
+AC_CACHE_CHECK([for tty device group], ow_cv_tty_group_id, [dnl
+changequote(, )dnl
+tty=`tty`
+ow_cv_tty_group_id=`ls -lg $tty | sed 's/^.*-[^ ]* *[^ ]* *[^ ]* *\([^ ]*\).*$/\1/'`
+changequote([, ])dnl
+])
+group_id=$ow_cv_tty_group_id
+
+dnl Path name of orville.conf file.
+test "x$prefix" = xNONE && prefix=$ac_default_prefix
+oc=`eval echo "${sysconfdir}/orville.conf" | sed "s/\/\//\//g"`
+echo "Configuration file will be in $oc"
+AC_DEFINE_UNQUOTED(ORVILLE_CONF,"$oc")
+wt=`eval echo "${sysconfdir}/wrttmp" | sed "s/\/\//\//g"`
+AC_DEFINE_UNQUOTED(D_WRTTMP,"$wt")
+wh=`eval echo "${sysconfdir}/wrthist" | sed "s/\/\//\//g"`
+AC_DEFINE_UNQUOTED(D_WRTHIST,"$wh")
+
+AC_OUTPUT(Makefile)
