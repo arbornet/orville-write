@@ -72,6 +72,7 @@ void type_help(char *file);
 void wrtlog(char *outcome);
 
 
+int
 main(int argc, char **argv)
 {
 long pos;
@@ -157,10 +158,10 @@ int tmp;
 	if (nl) putchar('\n');
 	nl= FALSE;
 	if (hiswrt.wrt_what[0] == '!')
-	    printf("%s is running %0.*s\n",hisname,
+	    printf("%s is running %.*s\n",hisname,
 		   UT_NAMESIZE-1, hiswrt.wrt_what+1);
 	else
-	    printf("%s is now writing %0.*s.\n",
+	    printf("%s is now writing %.*s.\n",
 		   hisname, UT_NAMESIZE, hiswrt.wrt_what);
 	if (rec_only || (telegram && hiswrt.wrt_record == 'a'))
 	{

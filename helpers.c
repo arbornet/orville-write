@@ -59,7 +59,7 @@ char devname[sizeof(((struct utmpx *)0)->ut_line) +6];
 
     /* Is his tty physically writable? */
 
-    sprintf(devname,"/dev/%.*s",((struct utmpx *)0)->ut_line -1,w->wrt_line);
+    snprintf(devname,sizeof(devname),"/dev/%.*s",(int)sizeof(w->wrt_line) - 1,w->wrt_line);
     if (stat(devname,&st))
     	return(0);
 
@@ -67,7 +67,7 @@ char devname[sizeof(((struct utmpx *)0)->ut_line) +6];
 }
 
 
-main(int argc, char **argv)
+int main(int argc, char **argv)
 {
 FILE *fp;
 struct wrttmp w;
@@ -160,12 +160,14 @@ int listthem= 1;
 		    /* Found a real helper -- count and print */
 		    count++;
 
-		    if (listthem)
+		    if (listthem) {
+                        int usize = (int)sizeof(u->ut_user) - 1;
+                        int lsize = (int)sizeof(u->ut_line) - 1;
 			printf("%-*.*s %-*.*s%s\n",
-			    sizeof(u->ut_user)-1, sizeof(u->ut_user)-1, u->ut_user,
-			    sizeof(u->ut_line)-1, sizeof(u->ut_user)-1, u->ut_line,
+			    usize, usize, u->ut_user,
+			    lsize, lsize, u->ut_line,
 			    tmp->busy ? " [busy]" : "");
-
+		    }
 	    	}
 		free(tmp);
 		if (list == NULL) break;

@@ -5,7 +5,7 @@ srcdir= .
 
 CC= cc
 INSTALL= /usr/bin/install -c
-LN= ln -s
+LN= ln -sf
 
 prefix= /arbornet
 exec_prefix= ${prefix}
@@ -15,7 +15,7 @@ datadir= ${prefix}/share
 sysconfdir= ${prefix}/etc
 localstatedir= ${prefix}/var
 
-groupid= 0x6b
+groupid= tty
 
 CPPFLAGS= 
 CFLAGS= -g -O2

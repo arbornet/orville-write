@@ -4,6 +4,7 @@
  */
 
 #include "write.h"
+#include <sys/wait.h>
 #include <signal.h>
 #include <setjmp.h>
 
@@ -118,7 +119,7 @@ int mask;
 void dosystem(char *cmd)
 {
 char was_cbreak= in_cbreak;
-FILE *pip, *wpopen();
+FILE *pip;
 int ch;
 
 	if (in_cbreak) cbreak(FALSE);
@@ -204,7 +205,6 @@ FILE *wpopen(char *cmd, char *mode)
 {
 int pip[2];
 register int chd_pipe,par_pipe;
-FILE *fdopen();
 char *shell;
 
 	if (f_lastpop) xwpclose();

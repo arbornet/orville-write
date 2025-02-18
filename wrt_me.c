@@ -22,28 +22,26 @@ int myuid;
 
     if ((ut= find_utmp(mytty)) == NULL || ut->ut_user[0] == '\0')
     {
-	printf("%s: Panic - Unable to find your tty (%s) in "_PATH_UTMP"\n",
+	printf("%s: Panic - Unable to find your tty (%s) in utmpx\n",
 	    progname, mytty);
 	done(1);
     }
     strncpy(myname, ut->ut_user, UT_NAMESIZE);
 
     /* Check if this is our real identity */
-#ifndef SLOWPASSWD
     myuid= getuid();
     if ((pw= getpwnam(myname)) == NULL || pw->pw_uid != myuid)
     {
 	if ((pw= getpwuid(myuid)) == NULL)
 	{
 	    printf("%s: Panic - No passwd file entry for uid %d (uname %s)\n",
-		progname,myuid, myname);
+		progname, myuid, myname);
 	    done(1);
 	}
 	strncpy(myuidname,pw->pw_name,UT_NAMESIZE);
 	myuidname[UT_NAMESIZE]= '\0';
     }
     else
-#endif
 	myuidname[0]= '\0';	/* ie: myuidname is the same as myname */
 
     /* Find my wrt_tmp entry */

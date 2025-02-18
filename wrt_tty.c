@@ -106,7 +106,7 @@ static char eol_char;
 void cbreak(bool flag)
 {
 static struct termios tio;
-static tfg;
+static int tfg;
 static char eol_char;
 
     if (flag)

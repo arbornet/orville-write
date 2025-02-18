@@ -22,7 +22,6 @@
 extern char eof_char, bs_char, kill_char;
 extern bool helpseeker;
 bool holdline;		/* True if we don't want to send line till it is done */
-struct passwd *getpwnam();
 
 #ifndef HOTZONE
 #define HOTZONE 9

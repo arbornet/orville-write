@@ -303,7 +303,7 @@ int i;
 #endif /*SIGTSTP*/
 
 	/* Close open file descriptors */
-	/* close(wstream);  /* Don't need this, since set close-on-exec */
+	/* close(wstream);*/  /* Don't need this, since set close-on-exec */
 	endutent();	/* Might or might not need this */
 
 	execvp(argv[0],argv);

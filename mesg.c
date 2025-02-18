@@ -12,10 +12,6 @@
 #include <pwd.h>
 #include <sys/stat.h>
 
-
-#define TRUE	1
-#define FALSE	0
-
 char *mytty;			/* my tty name in tty?? format */
 long mypos;			/* offset of my entry in wrttmp file */
 struct wrttmp mywrt;		/* my wrttmp entry */
@@ -64,7 +60,7 @@ int report= SMESG;		/* which of the above to put in return code */
 void set_perms(char new_mesg, int open_up);
 int report_status(void);
 int get_status(int rep);
-int find_me(void);
+void find_me(void);
 int may_help(void);
 void do_disconnect(void);
 void window_warning(int newmode);
@@ -588,7 +584,7 @@ int slot= 0;
 /* FIND_ME -- This finds my wrttmp entry and loads it into "mywrt".
  */
 
-int find_me()
+void find_me(void)
 {
 struct utmpx *ut;
 
@@ -702,9 +698,10 @@ FILE *fp;
 	        printf("still be able to write you for a few more minutes:\n");
 	        foundsome= 1;
 	    }
+            int usize = (int)sizeof(u->ut_user) - 1;
+            int lsize = (int)sizeof(u->ut_line) - 1;
 	    printf("  %-*.*s %-*.*s %4.1f more minutes\n",
-	    	sizeof(u->ut_user) -1, sizeof(u->ut_user) -1, u->ut_user,
-	    	sizeof(u->ut_line) -1, sizeof(u->ut_line) -1, u->ut_line,
+	    	usize, usize, u->ut_user, lsize, lsize, u->ut_line,
 	        (float)(f_answertel - now + hist[writee].tm)/60.0);
 	}
     }
@@ -719,7 +716,7 @@ char *myhomedir()
 {
 char myname[sizeof(myutmp.ut_user)+1];
 struct passwd *pw;
-char *dir, *getenv();
+char *dir;
 
     /* Try environment variable first */
     if ((dir= getenv("HOME")) != NULL)

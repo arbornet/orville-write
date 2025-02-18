@@ -89,10 +89,10 @@ char *tty;
     }
     if ((tty= ttyname(2)) == NULL || strlen(tty) < 5)
     {
-    	printf("%s: Not on a valid tty\n");
+    	printf("%s: Not on a valid tty\n",progname);
 	return 2;
     }
-    strncpy(mydevname,tty,UT_LINESIZE+10);
+    strlcpy(mydevname,tty,sizeof(mydevname));
     return 0;
 }
 

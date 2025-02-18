@@ -214,7 +214,7 @@ long tmppos;
         /* Check if this is the target user, ignoring X-window lines */
         if (ut->ut_line[0] != ':' &&
 	    ut->ut_type == USER_PROCESS &&
-	    !strncmp(hisname, ut->ut_user, UT_NAMESIZE))
+	    !strncmp(hisname, ut->ut_user, sizeof(ut->ut_user)))
 	{
 	    /* Count matches */
 	    cnt++;
@@ -223,7 +223,7 @@ long tmppos;
 	    find_wrttmp(ut->ut_line, ut->ut_tv.tv_sec, &tmpwrt, &tmppos);
 
 	    /* Is this guy writing me? */
-	    write_me= !strncmp(tmpwrt.wrt_what,myname,UT_NAMESIZE);
+	    write_me= !strncmp(tmpwrt.wrt_what,myname,sizeof(tmpwrt.wrt_what));
 
 	    /* Do I have write access?  How long has he been idle? */
 	    if (!write_me)
@@ -532,7 +532,7 @@ struct passwd *pwd;
 	pwd= getpwuid(0);
 	cpass= pcrypt("root",getpass("Password:"),pwd->pw_passwd);
 	flushinput(0);		/* discard typeahead */
-	if (am_root= !strcmp(cpass,pwd->pw_passwd))
+	if ((am_root= !strcmp(cpass,pwd->pw_passwd)))
 	    return (TRUE);
 #endif
 #ifdef PW_GETSPNAM
@@ -540,7 +540,7 @@ struct passwd *pwd;
 	spwd= getspnam("root");
 	cpass= pcrypt("root",getpass("Password:"),spwd->sp_pwdp);
 	flushinput(0);		/* discard typeahead */
-	if (am_root= !strcmp(cpass,spwd->sp_pwdp))
+	if ((am_root= !strcmp(cpass,spwd->sp_pwdp)))
 	    return (TRUE);
 #endif
 #ifdef PW_GETUSERPW
@@ -548,7 +548,7 @@ struct passwd *pwd;
 	upwd= getuserpw("root");
 	cpass= pcrypt("root",getpass("Password:"),upwd->upw_passwd);
 	flushinput(0);		/* discard typeahead */
-	if (am_root= !strcmp(cpass,upwd->upw_passwd))
+	if ((am_root= !strcmp(cpass,upwd->upw_passwd)))
 	    return (TRUE);
 #endif
 	printf("Password incorrect\n");
@@ -559,7 +559,7 @@ struct passwd *pwd;
 	return(TRUE);
 
     /* Am I already root? */
-    if (am_root= (getuid() == 0))
+    if ((am_root= (getuid() == 0)))
 	return(TRUE);
 
     /* Are his permissions on? */

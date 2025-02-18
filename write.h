@@ -33,6 +33,8 @@ int check_flood(void);
 void register_tel(void);
 
 /* wrt_main.c functions */
+void type_help(char *file);
+void wrtlog(char *outcome);
 void done(int code);
 
 /* wrt_me.c functions */
@@ -41,6 +43,7 @@ void set_modes(void);
 void reset_modes(void);
 bool nested_write(void);
 void init_lastmesg(void);
+void update_modes(void);
 void show_lastmesg(void);
 
 /* wrt_opt.c functions */
@@ -64,6 +67,7 @@ int get_cols(void);
 void dowrite(void);
 void dotelegram(bool nl);
 void open_record(void);
+void sendchar(int ch);
 int ishisexception(int yesfile, char *login);
 int isuexception(char *user, int yesfile, char *login);
 

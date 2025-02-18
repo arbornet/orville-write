@@ -48,17 +48,6 @@
 #define TTYPERMS
 #endif
 
-/* Weird alignment stuff borrowed from Marcus.  Is it needed? */
-
-#if defined(__GNUC__) && defined(WEIRD)
-#define WORD_ALIGN      __attribute__ ((packed))
-#else
-#ifdef _IBMR2
-#pragma options align=twobyte
-#endif
-#define WORD_ALIGN      /**/
-#endif
-
 struct wrthdr {
 	long hdr_size;			/* sizeof(struct wrthdr) */
 	long tmp_size;			/* sizeof(struct wrttmp) */
@@ -75,8 +64,8 @@ struct wrttmp {
 	char wrt_telpref;		/* user's program prefs (TELPREF_*) */
 	char wrt_modepref;		/* user's mode prefs (c, l or -) */
 	char wrt_help;			/* user is a helper?  y or n */
-	int  wrt_pid WORD_ALIGN;	/* our process id */
-	time_t wrt_time WORD_ALIGN;	/* should match ut_time in utmp file */
+	pid_t  wrt_pid;			/* our process id */
+	time_t wrt_time;		/* should match ut_time in utmp file */
 	char wrt_bells;                 /* ring bells? y or n */
 	char wrt_except;                /* use exception file? y or n */
 	};
@@ -97,10 +86,6 @@ struct wrttmp {
 #define TELPREF_ALL	(TELPREF_WRITE | TELPREF_TEL | TELPREF_TALK)
 #else
 #define TELPREF_ALL	(TELPREF_WRITE | TELPREF_TEL)
-#endif
-
-#ifdef _IBMR2
-#pragma options align=reset
 #endif
 
 /* These are the tty modes to use when permissions are on and off */

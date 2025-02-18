@@ -13,7 +13,7 @@ extern struct wrttmp hiswrt;
  * open.
  */
 
-void open_hist()
+void open_hist(void)
 {
 	if (hist_fd >= 0) return;
 
@@ -31,8 +31,7 @@ void open_hist()
  * one heck of a long time.
  */
 
-void empty_hist(hist)
-struct wrthist *hist;
+void empty_hist(struct wrthist *hist)
 {
 int i;
 	hist->tm= 0;
