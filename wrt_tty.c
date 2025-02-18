@@ -3,15 +3,7 @@
 
 #include "write.h"
 
-#ifdef F_TERMIO
-#include <termio.h>
-#endif /*F_TERMIO*/
-#ifdef F_TERMIOS
 #include <termios.h>
-#endif /*F_TERMIOS*/
-#ifdef F_STTY
-#include <sgtty.h>
-#endif /*F_STTY*/
 
 #if !defined(TCFLSH) && !defined(TCIFLUSH)
 #include <sys/file.h>
@@ -27,82 +19,6 @@ char kill_char;		/* User's kill character */
  * original tty modes.
  */
 
-#ifdef F_STTY
-void cbreak(bool flag)
-{
-struct tchars ctrlchars;
-static struct sgttyb sgtty;
-static tfg;
-
-    if (flag)
-    {
-	/* Get current modes */
-	ioctl(0,TIOCGETP,&sgtty);
-	tfg= sgtty.sg_flags;
-	bs_char= sgtty.sg_erase;
-	kill_char= sgtty.sg_kill;
-	ioctl(0,TIOCGETC,&ctrlchars);
-	eof_char= ctrlchars.t_eofc;
-
-	/* Remember that we are in cbreak mode */
-	in_cbreak= TRUE;
-
-	/* Turn on cbreak mode */
-	sgtty.sg_flags &= ~ECHO;
-	sgtty.sg_flags |= CBREAK;
-	ioctl(0,TIOCSETN,&sgtty);
-    }
-    else
-    {
-	/* Turn off cbreak mode - that is restore original modes */
-	sgtty.sg_flags= tfg;
-	ioctl(0,TIOCSETN,&sgtty);
-	in_cbreak= FALSE;
-    }
-}
-#endif /*F_STTY*/
-
-#ifdef F_TERMIO
-void cbreak(bool flag)
-{
-static struct termio tio;
-static tfg;
-static char eol_char;
-
-    if (flag)
-    {
-	/* Get current modes */
-	ioctl(0,TCGETA,&tio);
-	tfg= tio.c_lflag;
-	eof_char= tio.c_cc[VEOF];
-	eol_char= tio.c_cc[VEOL];
-	bs_char= tio.c_cc[VERASE];
-	kill_char= tio.c_cc[VKILL];
-
-	/* Remember that we are in cbreak mode */
-	in_cbreak= TRUE;
-
-	/* Turn on cbreak mode - that is turn off ICANON */
-	tio.c_lflag= tfg & ~ICANON;
-	tio.c_lflag &= ~ECHO;
-	tio.c_cc[VEOF]= 1;
-	tio.c_cc[VEOL]= 0;
-	ioctl(0,TCSETA,&tio);
-    }
-    else
-    {
-	/* Turn off cbreak mode - that is restore original modes */
-	tio.c_lflag= tfg;
-	tio.c_cc[VEOF]= eof_char;
-	tio.c_cc[VEOL]= eol_char;
-	ioctl(0,TCSETA,&tio);
-	in_cbreak= FALSE;
-    }
-}
-#endif /*F_TERMIO*/
-
-
-#ifdef F_TERMIOS
 void cbreak(bool flag)
 {
 static struct termios tio;
@@ -139,7 +55,6 @@ static char eol_char;
 	in_cbreak= FALSE;
     }
 }
-#endif /*F_TERMIOS*/
 
 /* FLUSHINPUT:  Flush input on tty on filedescriptor dev.
  */
@@ -168,15 +83,11 @@ int flushcode= FREAD;
 
 int get_cols()
 {
-#ifdef TIOCGWINSZ
-struct winsize x;
+	struct winsize x;
 
 	ioctl(2,TIOCGWINSZ,&x);
 	if (x.ws_col == 0 || x.ws_col > 80)
 		return(80);
 	else
 		return(x.ws_col);
-#else
-	return(80);
-#endif
 }
