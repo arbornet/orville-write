@@ -2,141 +2,37 @@ This file contains any messages produced by compilers while
 running configure, to aid debugging if configure makes a mistake.
 
 configure:535: checking for gcc
-configure:648: checking whether the C compiler (gcc  ) works
-configure:664: gcc -o conftest    conftest.c  1>&5
-configure:690: checking whether the C compiler (gcc  ) is a cross-compiler
+configure:648: checking whether the C compiler (cc  ) works
+configure:664: cc -o conftest    conftest.c  1>&5
+configure:661:1: warning: type specifier missing, defaults to 'int'; ISO C99 and later do not support implicit int [-Wimplicit-int]
+  661 | main(){return(0);}
+      | ^
+      | int
+1 warning generated.
+configure:690: checking whether the C compiler (cc  ) is a cross-compiler
 configure:695: checking whether we are using GNU C
-configure:704: gcc -E conftest.c
-configure:723: checking whether gcc accepts -g
+configure:723: checking whether cc accepts -g
 configure:785: checking for a BSD compatible install
 configure:838: checking whether ln -s works
 configure:860: checking for crypt in -lcrypt
-configure:879: gcc -o conftest -g -O2   conftest.c -lcrypt   1>&5
 configure:908: checking how to run the C preprocessor
-configure:929: gcc -E  conftest.c >/dev/null 2>conftest.out
 configure:988: checking for ANSI C header files
-configure:1001: gcc -E  conftest.c >/dev/null 2>conftest.out
-configure:1068: gcc -o conftest -g -O2   conftest.c -lcrypt  1>&5
 configure:1092: checking for sys/wait.h that is POSIX.1 compatible
-configure:1113: gcc -c -g -O2  conftest.c 1>&5
 configure:1134: checking whether time.h and sys/time.h may both be included
-configure:1148: gcc -c -g -O2  conftest.c 1>&5
 configure:1172: checking for fcntl.h
-configure:1182: gcc -E  conftest.c >/dev/null 2>conftest.out
 configure:1172: checking for paths.h
-configure:1182: gcc -E  conftest.c >/dev/null 2>conftest.out
 configure:1172: checking for sys/time.h
-configure:1182: gcc -E  conftest.c >/dev/null 2>conftest.out
 configure:1172: checking for unistd.h
-configure:1182: gcc -E  conftest.c >/dev/null 2>conftest.out
 configure:1172: checking for crypt.h
-configure:1182: gcc -E  conftest.c >/dev/null 2>conftest.out
 configure:1213: checking for termios.h
-configure:1223: gcc -E  conftest.c >/dev/null 2>conftest.out
 configure:1251: checking for working const
-configure:1305: gcc -c -g -O2  conftest.c 1>&5
 configure:1326: checking whether struct tm is in sys/time.h or time.h
-configure:1339: gcc -c -g -O2  conftest.c 1>&5
 configure:1360: checking for tm_zone in struct tm
-configure:1373: gcc -c -g -O2  conftest.c 1>&5
-configure:1432: checking whether gcc needs -traditional
+configure:1432: checking whether cc needs -traditional
 configure:1478: checking return type of signal handlers
-configure:1500: gcc -c -g -O2  conftest.c 1>&5
 configure:1521: checking for random
-configure:1549: gcc -o conftest -g -O2   conftest.c -lcrypt  1>&5
 configure:1521: checking for getutent
-configure:1549: gcc -o conftest -g -O2   conftest.c -lcrypt  1>&5
 configure:1521: checking for strchr
-configure:1549: gcc -o conftest -g -O2   conftest.c -lcrypt  1>&5
-configure:1533: warning: conflicting types for built-in function `strchr'
 configure:1576: checking for getuserpw
-configure:1604: gcc -o conftest -g -O2   conftest.c -lcrypt  1>&5
-/home/jan/tmp/ccSBSOVN.o(.text+0x9): In function `main':
-/home/jan/src/write/orville-write-2.55/configure:1598: undefined reference to `getuserpw'
-collect2: ld returned 1 exit status
-configure: failed program was:
-#line 1581 "configure"
-#include "confdefs.h"
-/* System header to define __stub macros and hopefully few prototypes,
-    which can conflict with char getuserpw(); below.  */
-#include <assert.h>
-/* Override any gcc2 internal prototype to avoid an error.  */
-/* We use char because int might match the return type of a gcc2
-    builtin and then its argument prototype would still apply.  */
-char getuserpw();
-
-int main() {
-
-/* The GNU C library defines this for functions which it implements
-    to always fail with ENOSYS.  Some functions are actually named
-    something starting with __ and the normal name is an alias.  */
-#if defined (__stub_getuserpw) || defined (__stub___getuserpw)
-choke me
-#else
-getuserpw();
-#endif
-
-; return 0; }
 configure:1632: checking for library containing getspnam
-configure:1650: gcc -o conftest -g -O2   conftest.c -lcrypt  1>&5
-configure:1694: checking for library containing kg_pwhash
-configure:1712: gcc -o conftest -g -O2   conftest.c -lcrypt  1>&5
-/home/jan/tmp/ccwck4vL.o(.text+0x9): In function `main':
-/home/jan/src/write/orville-write-2.55/configure:1708: undefined reference to `kg_pwhash'
-collect2: ld returned 1 exit status
-configure: failed program was:
-#line 1701 "configure"
-#include "confdefs.h"
-/* Override any gcc2 internal prototype to avoid an error.  */
-/* We use char because int might match the return type of a gcc2
-    builtin and then its argument prototype would still apply.  */
-char kg_pwhash();
-
-int main() {
-kg_pwhash()
-; return 0; }
-configure:1734: gcc -o conftest -g -O2   conftest.c -lshadow  -lcrypt  1>&5
-/usr/bin/ld: cannot find -lshadow
-collect2: ld returned 1 exit status
-configure: failed program was:
-#line 1723 "configure"
-#include "confdefs.h"
-/* Override any gcc2 internal prototype to avoid an error.  */
-/* We use char because int might match the return type of a gcc2
-    builtin and then its argument prototype would still apply.  */
-char kg_pwhash();
-
-int main() {
-kg_pwhash()
-; return 0; }
-configure:1757: checking for library containing pw_encrpyt
-configure:1775: gcc -o conftest -g -O2   conftest.c -lcrypt  1>&5
-/home/jan/tmp/ccItJtKB.o(.text+0x9): In function `main':
-/home/jan/src/write/orville-write-2.55/configure:1771: undefined reference to `pw_encrpyt'
-collect2: ld returned 1 exit status
-configure: failed program was:
-#line 1764 "configure"
-#include "confdefs.h"
-/* Override any gcc2 internal prototype to avoid an error.  */
-/* We use char because int might match the return type of a gcc2
-    builtin and then its argument prototype would still apply.  */
-char pw_encrpyt();
-
-int main() {
-pw_encrpyt()
-; return 0; }
-configure:1797: gcc -o conftest -g -O2   conftest.c -lshadow  -lcrypt  1>&5
-/usr/bin/ld: cannot find -lshadow
-collect2: ld returned 1 exit status
-configure: failed program was:
-#line 1786 "configure"
-#include "confdefs.h"
-/* Override any gcc2 internal prototype to avoid an error.  */
-/* We use char because int might match the return type of a gcc2
-    builtin and then its argument prototype would still apply.  */
-char pw_encrpyt();
-
-int main() {
-pw_encrpyt()
-; return 0; }
 configure:1858: checking for tty device group

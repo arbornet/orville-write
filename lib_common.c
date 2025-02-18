@@ -141,13 +141,13 @@ int init_wstream(int mode)
  * fail.  The tty name need not be null terminated.
  */
 
-struct utmp *find_utmp(char *tty)
+struct utmpx *find_utmp(char *tty)
 {
-struct utmp tmputmp;
+struct utmpx tmputmp;
 
     strncpy(tmputmp.ut_line, tty, UT_LINESIZE);
     setutent(); /* open and/or rewind */
-    return getutline(&tmputmp);
+    return getutxline(&tmputmp);
 }
 
 

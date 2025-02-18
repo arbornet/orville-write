@@ -1,26 +1,26 @@
+# Generated automatically from Makefile.in by configure.
 SHELL= /bin/sh
 
-srcdir= @srcdir@
-VPATH= @srcdir@
+srcdir= .
 
-CC= @CC@
-INSTALL= @INSTALL@
-LN= @LN_S@
+CC= cc
+INSTALL= /usr/bin/install -c
+LN= ln -s
 
-prefix= @prefix@
-exec_prefix= @exec_prefix@
-bindir= @bindir@
-mandir= @mandir@
-datadir= @datadir@
-sysconfdir= @sysconfdir@
-localstatedir= @localstatedir@
+prefix= /arbornet
+exec_prefix= ${prefix}
+bindir= ${exec_prefix}/bin
+mandir= ${prefix}/man
+datadir= ${prefix}/share
+sysconfdir= ${prefix}/etc
+localstatedir= ${prefix}/var
 
-groupid= @group_id@
+groupid= 0x6b
 
-CPPFLAGS= @CPPFLAGS@
-CFLAGS= @CFLAGS@
-LDFLAGS= @LDFLAGS@
-LIB= @LIBS@
+CPPFLAGS= 
+CFLAGS= -g -O2
+LDFLAGS= 
+LIB= -lcrypt 
 
 all: write mesg amin huh helpers
 

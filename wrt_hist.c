@@ -86,6 +86,7 @@ void get_hist(long writer, long writee, struct wrthist *hist)
  * slot "writer" wrote the person in slot "writee".
  */
 
+void
 put_hist(long writer, long writee, struct wrthist *hist)
 {
 	if (writee > MAXSLOTS)

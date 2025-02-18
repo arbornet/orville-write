@@ -30,7 +30,7 @@
 #define WRTTMP_H
 
 #include <sys/types.h>
-#include <utmp.h>
+#include <utmpx.h>
 
 /* BSDI is only Unix I know of that threatens to change namesize from 8 to
  * anything else.  Most don't even have a define for it.  Here we default
@@ -38,10 +38,10 @@
  * for us.
  */
 #ifndef UT_NAMESIZE
-#define UT_NAMESIZE 8
+#define UT_NAMESIZE 32
 #endif
 #ifndef UT_LINESIZE
-#define UT_LINESIZE 8
+#define UT_LINESIZE 16
 #endif
 
 #if defined(TTY_GROUP) || defined(TTY_OTHERS)
